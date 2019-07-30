@@ -1,0 +1,2 @@
+pdf:
+	xelatex cheatsheet.tex
