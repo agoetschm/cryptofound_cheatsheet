@@ -1,0 +1,379 @@
+\documentclass[a4paper,german]{article}
+
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage{braket}
+
+
+%This is how you can create a "claim"-environment (or a lemma/Theorem/definition etc environment)
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+%This is how you can create a command of your own, e.g. to simplify the usage signs you often use.
+\newcommand{\E}{\mathbb{E}}
+
+%Titlepage:
+\title{Cheatsheet for CryptoFound}
+%\author{mandragore}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\section*{Definitions}
+\subsection*{Exercise 1}
+\begin{definition}
+	The \emph{t-message} "IND-CPA-RRC game" bit-guessing problem $\llbracket S, B\rrbracket$ for symmetric cryptosystems is defined as follows: $B$ is a uniformly random bit. The system S is defined as follows:
+
+	\begin{enumerate}
+	
+		\item  The system S samples a secret key $k$ from the keyspace $\mathcal{K}$ according to the cryptosystems key distribution.
+		\item  The system S receives up to $t$ inputs $m_i \in \mathcal{M}$ and outputs $E(k, m_i)$, with fresh randomness.
+		\item  The system S receives as input a message $m \in \mathcal{M}$ and outputs  $E(k, m_B)$, with fresh randomness if $B = 0$. If $B=1$ then S samples a message $\hat{m} \in \mathcal{M}$ of length $|m|$, uniformly at random, and outputs $E(k, \hat{m})$, for fresh randomness.
+		 \item If on step 2, the system has received less than t messages, step 2 is repeated until a total of t messages has been received.
+	
+	\end{enumerate}
+\end{definition}
+\subsection*{Exercise 2}
+
+\begin{definition}
+	The t-message "IND-CPA-RRO" bit guessing problem $\llbracket S; B \rrbracket$ for symmetric cryptosystems is defined as follows: $B$ is a uniformly random bit. The system $S$ is defined as follows:
+
+	\begin{enumerate}
+	
+		\item  S chooses a random secret key according to the cryptosystem's distribution
+		\item  S receives as input up to t messages $m_i \in \mathcal{M}$. If $B=0$ S outputs $E(k, m_i)$ for each input $m_i$, with fresh randomness. If $B=1$, S samples uniformly at random message $\hat{m}_i \in \mathcal{M}$ such that $|\hat{m}_i| = |m_i|$, and outputs $E(k, \hat{m}_i)$, with fresh randomness.
+	
+	\end{enumerate}
+\end{definition}
+\subsection*{Exercise 6}
+\begin{definition}
+	A one-way function $f: X \rightarrow Y$ is an efficiently computable function, such that no efficient algorithm can win the following game:
+
+	\begin{enumerate}
+	
+		\item  The game chooses a value $x \in \mathcal{X}$ uniformly at random, and outputs $f(x)$.
+		\item  The game receives as input one value $x^\prime \in \mathcal{X}$. The game is won iff $f(x^\prime) = f(x)$.
+	
+	\end{enumerate}
+\end{definition}
+\subsection*{Chapter 2}
+
+\begin{definition}
+	The winning probability of \emph{W} for game \emph{G} is
+
+	\[
+		\Gamma^{W}(G) \vcentcolon= \Pr\nolimits^{WG}(A = 1)
+	.\] 
+
+\end{definition}
+
+\begin{definition}
+	The advantage of \emph{D} in distinguishing \emph{S} from \emph{T} is
+
+	\[
+		\Delta^D(S,T) = \Pr\nolimits^{DT} (Z = 1) - \Pr\nolimits^{DS}(Z = 1)
+	.\] 
+\end{definition}
+
+\begin{definition}
+	The maximal advantage of a distinguisher class $\mathcal{D}$ is
+
+	\[
+		\Delta^\mathcal{D}(S,T) \vcentcolon= \sup_{D \in \mathcal{D}}\Delta^D(S,T)
+	.\] 
+\end{definition}
+
+\begin{definition}
+	The statistical distance of two random variables \emph{X} and \emph{Y} over a finite set $\mathcal{X}$ is
+
+	\[
+		\delta(X,Y) \vcentcolon= \frac{1}{2} \sum\limits_{x \in \mathcal{X}} \left| \Pr\nolimits_X(x) - \Pr\nolimits_Y(x)\right|
+	.\] 
+\end{definition}
+
+\begin{definition}
+	The advantage of $D$ in guessing bit $B$ is
+
+	\[
+		\Lambda^D(\llbracket S,B\rrbracket) \vcentcolon= 2\left( \Pr\nolimits^{D(S,B)}(Z = B) - \frac{1}{2}\right)
+	\]
+\end{definition}
+
+\subsection*{Chapter 3}
+
+\begin{definition}
+	A symmetric cryptosystem for message space $\mathcal{M}$, keyspace  $\mathcal{K}$, and ciphertex space $\mathcal{C}$ consists of:
+
+	\begin{itemize}
+	
+		\item  A probability distribution over $\mathcal{K}$,
+		\item  A (possibly) randomised encryption function $E: \mathcal{K} \times \mathcal{M} \rightarrow \mathcal{C}$,
+		\item  A decryption function $d: \mathcal{K} \times \mathcal{C} \rightarrow \mathcal{M} \cup \{\bot\}$
+	
+	\end{itemize}
+
+	such that $d(k, E(k, m)) = m$, $\forall k \in \mathcal{K}$ and $\forall m \in \mathcal{M}$
+\end{definition}
+
+\begin{definition}
+	The \emph{t-message} "IND-CPA game" bit-guessing problem $\llbracket S, B\rrbracket$ for symmetric cryptosystems is defined as follows: $B$ is a uniformly random bit. The system S is defined as follows:
+
+	\begin{enumerate}
+	
+		\item  The system S samples a secret key $k$ from the keyspace $\mathcal{K}$ according to the cryptosystems key distribution.
+		\item  The system S receives up to $t$ inputs $m_i \in \mathcal{M}$ and outputs $E(k, m_i)$, with fresh randomness.
+		\item  The system S receives as input a tuple $(m_0, m_1) \in \mathcal{M} \times \mathcal{M}$ and outputs  $E(k, m_B)$, with fresh randomness.
+		 \item If on step 2, the system has received less than t messages, step 2 is repeated until a total of t messages has been received.
+	
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}
+	The PRG distinction problem for a function $g: \{0, 1\}^k \rightarrow \{0, 1\}^m$ for $m > k$ is 
+
+	\[
+		\braket{g(U_k), U_m}
+	.\] 
+
+	Where $U_i$ denotes a uniform string of length $i$.
+\end{definition}
+
+\begin{definition}
+	A block cipher with block length $n$ and key length $m$, is a function $f: \{0,1\}^n \times \{0,1\}^m \rightarrow \{0,1\}^n$ such that $f(\cdot, k)$ is a bijection $\forall k \in \{0,1\}^m$
+\end{definition}
+
+\begin{definition}
+	A message authentication code (MAC) over a message space $\mathcal{M}$, a key space $\mathcal{K}$ and a tag space $\mathcal{T}$ consists of:
+
+	\begin{itemize}
+	
+		\item  A distribution over the key space $\mathcal{K}$ 
+		\item  A function $f: \mathcal{K} \times \mathcal{M} \rightarrow \mathcal{T}$ 
+	\end{itemize}
+
+In order to use the MAC, the author of a message $m$ calculates the tag $t = f(k,m)$ and sends the tuple $(m, t)$ to the receiver of the message. The receiver, after having received $(m^\prime, t^\prime)$ calculates $t^{\prime\prime} = f(k, m^\prime)$ and accepts the message if $t^\prime = t^{\prime\prime}$
+\end{definition}
+
+\begin{definition}
+	The t-message MAC-forgery game for a MAC f is a game defined as follows:
+
+	\begin{enumerate}
+	
+		\item  The game samples a secret key $k \in \mathcal{K}$ according to the MAC's distribution.
+		\item  The game accepts up to t inputs $m_i \in \mathcal{M}$ and outputs $f(k, m_i)$.
+		\item  The game accepts as input a tuple $(m, t) \in \mathcal{M \times T}$ and the game is won iff  $f(k, m) = t$ and $m \neq m_i ~ \forall m_i$ received during step 2
+	
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}
+	The discrete logarithm problem for a group $G = \braket{g}$ is finding, for a given (uniformly at random chosen) element $y \in G$, an $x \in \mathbb{Z}_{|G|}$ such that $y = g^x$.
+\end{definition}
+
+\begin{definition}
+	The Computational Diffie-Hellman problem is, given elements (chosen uniformly at random) $A = g^a$ and $B = g^b$ in $G$, calculating a third element $c \in G$ such that $c = g^{ab}$.
+\end{definition}
+
+\begin{definition}
+	The Decisional Diffie-Hellman problem is, given three elements  $A = g^a$ and $B = g^b$ and $C \in G$, distinguishing if $A$ and $B$ are independently chosen uniformly at random and $C = g^{ab}$, or if $A$, $B$, and $C$ are chosen uniformly at random.
+\end{definition}
+
+\begin{definition}
+	A Public Key Encryption scheme over a message space $\mathcal{M}$, a secret key space $\mathcal{S}$, a public key space $\mathcal{P}$ and a ciphertext space $\mathcal{C}$ consists of:
+	
+	\begin{itemize}
+	
+		\item  A joint distribution over $\mathcal{S \times P}$
+		\item  A (possibly randomized) encryption function $E: \mathcal{P \times M} \rightarrow \mathcal{C}$
+		\item  A decryption function $d: \mathcal{S \times C} \rightarrow \mathcal{M} \cup \{\bot\}$
+	\end{itemize}
+	such that $d(s, E(p, m)) = m$ $\forall m \in \mathcal{M}$ and $\forall (s, p) \in \mathcal{S \times P}$ with positive probability.
+\end{definition}
+
+\begin{definition}
+	The t-message IND-CCA bit guessing problem for public key encryption schemes $\llbracket S, B\rrbracket$ is defined as follows: $B$ is a uniformly random bit and system $S$ is defined as
+
+	\begin{enumerate}
+	
+		\item  S samples a keypair $(s, p) \in \mathcal{S \times P}$ according to the scheme's keypair distribution, and outputs $p$.
+		\item  S accepts as input up to t ciphertexts $c_i \in \mathcal{C}$ and returns $d(s, c_i)$
+		\item  S accepts as input a tuple $(m_1, m_0) \in \mathcal{M \times M}$ and outputs $E(p, m_B)$ with fresh randomness.
+		\item  If less than t messages where submitted during step 2, then step 2 is repeated until a total of t messages is received.
+	
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}
+	The IND-CPA bit guessing game for a public key encryption scheme is defined as the IND-CCA bit guessing problem for the same cryptosystem, but with omission of steps 2 and 4.
+\end{definition}
+
+\begin{definition}
+	A Trapdoor One Way Permutation (TOWP) over a parameter space $\mathcal{P}$, a trapdoor space $\mathcal{T}$, a domain $\mathcal{X}$, and a codomain $\mathcal{Y}$ consists of
+
+	\begin{itemize}
+	
+		\item  A distribution over $\mathcal{P \times T}$ 
+		\item  A function $f: \mathcal{X \times P} \rightarrow \mathcal{Y}$ 
+		\item  and a function $g: \mathcal{Y \times T} \rightarrow \mathcal{X} \cup \{\bot\}$
+	\end{itemize}
+	such that for all $x \in \mathcal{X}$ and for all pairs $(p, t) \in \mathcal{P \times T}$ with positive probability, $g(f(x, p), t) = x$.
+\end{definition}
+
+\begin{definition}
+	The TOWP inversion game is defined as follows
+
+	\begin{enumerate}
+	
+		\item  The game samples $(p, t) \in \mathcal{P \times T}$ according to the TOWP's distribution, and an $x \in \mathcal{X}$ uniformly at random. It then outputs $(f(x, p), p)$
+		\item  The game accepts as input a value $x^\prime \in \mathcal{X}$. The game is won iff $x^\prime = x$.
+	
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}
+	The RSA TOWP is defined as follows:
+
+	\begin{itemize}
+	
+		\item  The distribution over $\mathcal{P \times T}$ is defined as follows:
+			A pair of primes $p$ and $q$ is chosen according to some distribution. Let $n = pq$, and choose $e$ such that $gcd(e, \phi(n))=1$, according to some distribution. Find $d$ such that $d = e^{-1} \mod \phi(n)$. The parameter is  $(n, e)$ and the trapdoor is $(n, d)$ 
+		\item  $f(x, p) = x^e \mod n$
+		\item  $g(y, t) = y^d \mod n$
+	
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	A Digital Signature Scheme over a message space $\mathcal{M}$, a signature space $\mathcal{S}$, a signing key space $\mathcal{Z}$, and a verification key space $\mathcal{V}$ consists of:
+
+	\begin{itemize}
+	
+		\item  A distribution over $\mathcal{Z \times V}$
+		\item  A possibly randomized signing function $\sigma : \mathcal{M \times Z} \rightarrow \mathcal{S}$
+		\item  A verification function $\tau : \mathcal{M \times V \times S} \rightarrow \{0, 1\}$
+	\end{itemize}
+
+	such that $\tau(m, v, \sigma(m, z)) = 1$ for all messages $m \in \mathcal{M}$ and for all pairs $(z, v) \in \mathcal{Z \times V}$ with positive probability.
+\end{definition}
+
+\begin{definition}
+	The t-message signature forgery game $G$ is defined as follows:
+
+	\begin{enumerate}
+	
+		\item  $G$ samples a pair $(z, v) \in \mathcal{Z \times V}$ according to the signature scheme's distribution, and outputs $v$.
+
+		\item  $G$ accepts up to t messages $m_i \in \mathcal{M}$ and outputs $\sigma(m_i, z)$, for fresh randomness. 
+		\item  $G$ accepts as input a tuple $(m, s) \in \mathcal{M \times S}$. The game is won iff $\tau(m, v, s) = 1$ and $m$ was not submitted as an $m_j$ during step 2.
+	
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}
+	A hash function is a function $h: D \rightarrow R$ such that $|D| \gg |R|$.
+\end{definition}
+
+\begin{definition}
+	Given a cryptographic hash function $h: \mathcal{M} \rightarrow \mathbb{Z}_n$, and the RSA-TOWP a Full Domain Hash (FDH) is a ignature scheme, and is defined as follows:
+
+	\begin{itemize}
+	
+		\item  The message space of FDA is $\mathcal{M}$. The signature space of FDA is $\mathbb{Z}_n$. The signing key space of the FDA is the trapdoor space of the RSA\_TWOP. The verification key space of the FDA is the parameter space of the RSA-TOWP.
+		\item  The signing function of the FDA is defined as 
+
+			\[
+				\sigma((n, d), m) = (h(m))^d \bmod n
+			\] 
+		\item  The verification function is defined as
+
+			\[
+				\tau((n, e), m, s) = h(m) == s^e \bmod n
+			.\] 
+	
+	\end{itemize}
+
+
+\end{definition}
+
+\begin{definition}
+	The t-message collision finding game $G$ for a hash function $h$ is defined as follows:
+
+	\begin{enumerate}
+	
+		\item  $G$ accepts up to t inputs $x_i \in D$ and outputs $h(x_i)$.
+		\item  The game is won if during step 1 there were two distinct inputs $x, x^\prime$, such that $h(x) = h(x^\prime)$.
+	
+	\end{enumerate}
+\end{definition}
+
+\section*{Theorems \& Lemmas}
+\subsection*{Chapter 2}
+\begin{lemma}
+	The best probabilistic distinguisher has the same advantage as the best deterministic distinguisher
+\end{lemma}
+
+\begin{lemma}
+	The advantage of the best distringuisher for two random variables $X$ and $Y$, is the statistical distance between $X$ and $Y$.
+\end{lemma}
+
+\begin{lemma}[Hybrid Argument]
+	For any distinguisher D,
+
+	\[
+		\Delta^D(S_0, S_k) = \sum\limits_{i=0}^{k-1} \Delta^D(S_i, S_{i+1})
+	.\] 
+\end{lemma}
+
+\begin{lemma}
+	\[
+		\Lambda^D(\llbracket S_U ; U \rrbracket) = \Delta^D(S_0, S_1).
+	\]
+\end{lemma}
+
+\begin{lemma}
+	For any distinguisher $D$ there exists a distinguisher $D^\prime$ such that 
+
+	\[
+		\Delta^D([S, B], [S,U]) = \frac{1}{2}\Lambda^{D^\prime}(\llbracket S; B\rrbracket)
+	\] 
+\end{lemma}
+
+\begin{lemma}
+	For a group $G = \braket{S, \oplus}$, consider a random variable $X$ over $S$, and an independent random variable $U$, uniform over $S$. Then the random variable $U \oplus X$ is uniformly distributed over $S$, and independent from $X$.
+\end{lemma}
+
+\subsection*{Chapter 3}
+\begin{theorem}
+	Let $G$ be a finite additive group, and let $e \in \mathbb{Z}$ such that $gcd(e, |G|)=1$. The $e$-th root of any element $y$ of $G$ (that is an $x \in G$ such that $x^e = y$) can be computed according to $x^d \mod |G|$, where $d$ satisfies:
+
+	\[
+		ed =_{|G|} 1 
+	.\] 
+
+	$d$ can be computed using the extended euclidean algorithm.
+\end{theorem}
+
+\begin{lemma}
+	Let $p, q$ be primes, and $n = pq$. Given $n$ and $\phi(n)$, one can efficiently compute $p$ and $q$.
+	
+\end{lemma}
+
+\begin{lemma}
+	The RSA function is a premutation on $\mathbb{Z}_n$, it does not need to be restricted to $\mathbb{Z}^*_n$.
+\end{lemma}
+
+\begin{theorem}
+	There cannot exist a computable function that implements a random oracle.
+\end{theorem}
+
+\begin{lemma}
+	If a hash-then-sign construction uses a secure fixed-length signature scheme, and a collision resistant, then the whole construction is secure. 
+\end{lemma}
+\end{document}
