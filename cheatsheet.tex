@@ -14,8 +14,27 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 
+% hack to have custom numbering
+\newtheorem{innercustomdef}{Definition}
+\newenvironment{customdef}[1]{\renewcommand\theinnercustomdef{#1}\innercustomdef}{\endinnercustomdef}
+\newtheorem{innercustomthm}{Theorem}
+\newenvironment{customthm}[1]{\renewcommand\theinnercustomthm{#1}\innercustomthm}{\endinnercustomthm}
+\newtheorem{innercustomlem}{Lemma}
+\newenvironment{customlem}[1]{\renewcommand\theinnercustomlem{#1}\innercustomlem}{\endinnercustomlem}
+\newtheorem{innercustomcor}{Corollary}
+\newenvironment{customcor}[1]{\renewcommand\theinnercustomcor{#1}\innercustomcor}{\endinnercustomcor}
+
 %This is how you can create a command of your own, e.g. to simplify the usage signs you often use.
 \newcommand{\E}{\mathbb{E}}
+
+\DeclareMathOperator{\cbc}{C\mergeletter B\mergeletter C}
+\newcommand{\mergeletter}{%
+  \mkern-3.5mu
+}
+\newcommand{\condequiv}{|\mergeletterr \equiv}
+\newcommand{\mergeletterr}{%
+  \mkern-9mu
+}
 
 %Titlepage:
 \title{Cheatsheet for CryptoFound}
@@ -32,12 +51,12 @@
 	The \emph{t-message} "IND-CPA-RRC game" bit-guessing problem $\llbracket S, B\rrbracket$ for symmetric cryptosystems is defined as follows: $B$ is a uniformly random bit. The system S is defined as follows:
 
 	\begin{enumerate}
-	
+
 		\item  The system S samples a secret key $k$ from the keyspace $\mathcal{K}$ according to the cryptosystems key distribution.
 		\item  The system S receives up to $t$ inputs $m_i \in \mathcal{M}$ and outputs $E(k, m_i)$, with fresh randomness.
 		\item  The system S receives as input a message $m \in \mathcal{M}$ and outputs  $E(k, m_B)$, with fresh randomness if $B = 0$. If $B=1$ then S samples a message $\hat{m} \in \mathcal{M}$ of length $|m|$, uniformly at random, and outputs $E(k, \hat{m})$, for fresh randomness.
 		 \item If on step 2, the system has received less than t messages, step 2 is repeated until a total of t messages has been received.
-	
+
 	\end{enumerate}
 \end{definition}
 \subsection*{Exercise 2}
@@ -46,10 +65,10 @@
 	The t-message "IND-CPA-RRO" bit guessing problem $\llbracket S; B \rrbracket$ for symmetric cryptosystems is defined as follows: $B$ is a uniformly random bit. The system $S$ is defined as follows:
 
 	\begin{enumerate}
-	
+
 		\item  S chooses a random secret key according to the cryptosystem's distribution
 		\item  S receives as input up to t messages $m_i \in \mathcal{M}$. If $B=0$ S outputs $E(k, m_i)$ for each input $m_i$, with fresh randomness. If $B=1$, S samples uniformly at random message $\hat{m}_i \in \mathcal{M}$ such that $|\hat{m}_i| = |m_i|$, and outputs $E(k, \hat{m}_i)$, with fresh randomness.
-	
+
 	\end{enumerate}
 \end{definition}
 \subsection*{Exercise 6}
@@ -57,323 +76,519 @@
 	A one-way function $f: X \rightarrow Y$ is an efficiently computable function, such that no efficient algorithm can win the following game:
 
 	\begin{enumerate}
-	
+
 		\item  The game chooses a value $x \in \mathcal{X}$ uniformly at random, and outputs $f(x)$.
 		\item  The game receives as input one value $x^\prime \in \mathcal{X}$. The game is won iff $f(x^\prime) = f(x)$.
-	
+
 	\end{enumerate}
 \end{definition}
+
 \subsection*{Chapter 2}
 
-\begin{definition}
+\begin{customdef}{2.1}
 	The winning probability of \emph{W} for game \emph{G} is
 
 	\[
 		\Gamma^{W}(G) \vcentcolon= \Pr\nolimits^{WG}(A = 1)
-	.\] 
+	.\]
 
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{2.2}
 	The advantage of \emph{D} in distinguishing \emph{S} from \emph{T} is
 
 	\[
 		\Delta^D(S,T) = \Pr\nolimits^{DT} (Z = 1) - \Pr\nolimits^{DS}(Z = 1)
-	.\] 
-\end{definition}
+	.\]
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{2.3}
 	The maximal advantage of a distinguisher class $\mathcal{D}$ is
 
 	\[
 		\Delta^\mathcal{D}(S,T) \vcentcolon= \sup_{D \in \mathcal{D}}\Delta^D(S,T)
-	.\] 
-\end{definition}
+	.\]
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{2.4}
 	The statistical distance of two random variables \emph{X} and \emph{Y} over a finite set $\mathcal{X}$ is
 
 	\[
 		\delta(X,Y) \vcentcolon= \frac{1}{2} \sum\limits_{x \in \mathcal{X}} \left| \Pr\nolimits_X(x) - \Pr\nolimits_Y(x)\right|
-	.\] 
-\end{definition}
+	.\]
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{2.5}
 	The advantage of $D$ in guessing bit $B$ is
 
 	\[
 		\Lambda^D(\llbracket S,B\rrbracket) \vcentcolon= 2\left( \Pr\nolimits^{D(S,B)}(Z = B) - \frac{1}{2}\right)
 	\]
-\end{definition}
+\end{customdef}
 
 \subsection*{Chapter 3}
 
-\begin{definition}
-	A symmetric cryptosystem for message space $\mathcal{M}$, keyspace  $\mathcal{K}$, and ciphertex space $\mathcal{C}$ consists of:
+\begin{customdef}{3.1}
+	A symmetric cryptosystem for message space $\mathcal{M}$, keyspace  $\mathcal{K}$, and ciphertext space $\mathcal{C}$ consists of:
 
 	\begin{itemize}
-	
+
 		\item  A probability distribution over $\mathcal{K}$,
 		\item  A (possibly) randomised encryption function $E: \mathcal{K} \times \mathcal{M} \rightarrow \mathcal{C}$,
 		\item  A decryption function $d: \mathcal{K} \times \mathcal{C} \rightarrow \mathcal{M} \cup \{\bot\}$
-	
+
 	\end{itemize}
 
-	such that $d(k, E(k, m)) = m$, $\forall k \in \mathcal{K}$ and $\forall m \in \mathcal{M}$
-\end{definition}
+	such that $d(k, E(k, m)) = m$, $\forall k \in \mathcal{K}$ and $\forall m \in \mathcal{M}$.
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.2}
 	The \emph{t-message} "IND-CPA game" bit-guessing problem $\llbracket S, B\rrbracket$ for symmetric cryptosystems is defined as follows: $B$ is a uniformly random bit. The system S is defined as follows:
 
 	\begin{enumerate}
-	
+
 		\item  The system S samples a secret key $k$ from the keyspace $\mathcal{K}$ according to the cryptosystems key distribution.
 		\item  The system S receives up to $t$ inputs $m_i \in \mathcal{M}$ and outputs $E(k, m_i)$, with fresh randomness.
 		\item  The system S receives as input a tuple $(m_0, m_1) \in \mathcal{M} \times \mathcal{M}$ and outputs  $E(k, m_B)$, with fresh randomness.
 		 \item If on step 2, the system has received less than t messages, step 2 is repeated until a total of t messages has been received.
-	
-	\end{enumerate}
-\end{definition}
 
-\begin{definition}
-	The PRG distinction problem for a function $g: \{0, 1\}^k \rightarrow \{0, 1\}^m$ for $m > k$ is 
+	\end{enumerate}
+\end{customdef}
+
+\begin{customdef}{3.3}
+	The PRG distinction problem for a function $g: \{0, 1\}^k \rightarrow \{0, 1\}^m$ for $m > k$ is
 
 	\[
 		\braket{g(U_k), U_m}
-	.\] 
+	.\]
 
 	Where $U_i$ denotes a uniform string of length $i$.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.5}
 	A block cipher with block length $n$ and key length $m$, is a function $f: \{0,1\}^n \times \{0,1\}^m \rightarrow \{0,1\}^n$ such that $f(\cdot, k)$ is a bijection $\forall k \in \{0,1\}^m$
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.6}
 	A message authentication code (MAC) over a message space $\mathcal{M}$, a key space $\mathcal{K}$ and a tag space $\mathcal{T}$ consists of:
 
 	\begin{itemize}
-	
-		\item  A distribution over the key space $\mathcal{K}$ 
-		\item  A function $f: \mathcal{K} \times \mathcal{M} \rightarrow \mathcal{T}$ 
+
+		\item  A distribution over the key space $\mathcal{K}$
+		\item  A function $f: \mathcal{K} \times \mathcal{M} \rightarrow \mathcal{T}$
 	\end{itemize}
 
 In order to use the MAC, the author of a message $m$ calculates the tag $t = f(k,m)$ and sends the tuple $(m, t)$ to the receiver of the message. The receiver, after having received $(m^\prime, t^\prime)$ calculates $t^{\prime\prime} = f(k, m^\prime)$ and accepts the message if $t^\prime = t^{\prime\prime}$
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.7}
 	The t-message MAC-forgery game for a MAC f is a game defined as follows:
 
 	\begin{enumerate}
-	
+
 		\item  The game samples a secret key $k \in \mathcal{K}$ according to the MAC's distribution.
 		\item  The game accepts up to t inputs $m_i \in \mathcal{M}$ and outputs $f(k, m_i)$.
 		\item  The game accepts as input a tuple $(m, t) \in \mathcal{M \times T}$ and the game is won iff  $f(k, m) = t$ and $m \neq m_i ~ \forall m_i$ received during step 2
-	
+
 	\end{enumerate}
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.8}
 	The discrete logarithm problem for a group $G = \braket{g}$ is finding, for a given (uniformly at random chosen) element $y \in G$, an $x \in \mathbb{Z}_{|G|}$ such that $y = g^x$.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.9}
 	The Computational Diffie-Hellman problem is, given elements (chosen uniformly at random) $A = g^a$ and $B = g^b$ in $G$, calculating a third element $c \in G$ such that $c = g^{ab}$.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.10}
 	The Decisional Diffie-Hellman problem is, given three elements  $A = g^a$ and $B = g^b$ and $C \in G$, distinguishing if $A$ and $B$ are independently chosen uniformly at random and $C = g^{ab}$, or if $A$, $B$, and $C$ are chosen uniformly at random.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.11}
 	A Public Key Encryption scheme over a message space $\mathcal{M}$, a secret key space $\mathcal{S}$, a public key space $\mathcal{P}$ and a ciphertext space $\mathcal{C}$ consists of:
-	
+
 	\begin{itemize}
-	
+
 		\item  A joint distribution over $\mathcal{S \times P}$
 		\item  A (possibly randomized) encryption function $E: \mathcal{P \times M} \rightarrow \mathcal{C}$
 		\item  A decryption function $d: \mathcal{S \times C} \rightarrow \mathcal{M} \cup \{\bot\}$
 	\end{itemize}
 	such that $d(s, E(p, m)) = m$ $\forall m \in \mathcal{M}$ and $\forall (s, p) \in \mathcal{S \times P}$ with positive probability.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.12}
 	The t-message IND-CCA bit guessing problem for public key encryption schemes $\llbracket S, B\rrbracket$ is defined as follows: $B$ is a uniformly random bit and system $S$ is defined as
 
 	\begin{enumerate}
-	
+
 		\item  S samples a keypair $(s, p) \in \mathcal{S \times P}$ according to the scheme's keypair distribution, and outputs $p$.
 		\item  S accepts as input up to t ciphertexts $c_i \in \mathcal{C}$ and returns $d(s, c_i)$
 		\item  S accepts as input a tuple $(m_1, m_0) \in \mathcal{M \times M}$ and outputs $E(p, m_B)$ with fresh randomness.
 		\item  If less than t messages where submitted during step 2, then step 2 is repeated until a total of t messages is received.
-	
+
 	\end{enumerate}
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.13}
 	The IND-CPA bit guessing game for a public key encryption scheme is defined as the IND-CCA bit guessing problem for the same cryptosystem, but with omission of steps 2 and 4.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.14}
 	A Trapdoor One Way Permutation (TOWP) over a parameter space $\mathcal{P}$, a trapdoor space $\mathcal{T}$, a domain $\mathcal{X}$, and a codomain $\mathcal{Y}$ consists of
 
 	\begin{itemize}
-	
-		\item  A distribution over $\mathcal{P \times T}$ 
-		\item  A function $f: \mathcal{X \times P} \rightarrow \mathcal{Y}$ 
+
+		\item  A distribution over $\mathcal{P \times T}$
+		\item  A function $f: \mathcal{X \times P} \rightarrow \mathcal{Y}$
 		\item  and a function $g: \mathcal{Y \times T} \rightarrow \mathcal{X} \cup \{\bot\}$
 	\end{itemize}
 	such that for all $x \in \mathcal{X}$ and for all pairs $(p, t) \in \mathcal{P \times T}$ with positive probability, $g(f(x, p), t) = x$.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.15}
 	The TOWP inversion game is defined as follows
 
 	\begin{enumerate}
-	
+
 		\item  The game samples $(p, t) \in \mathcal{P \times T}$ according to the TOWP's distribution, and an $x \in \mathcal{X}$ uniformly at random. It then outputs $(f(x, p), p)$
 		\item  The game accepts as input a value $x^\prime \in \mathcal{X}$. The game is won iff $x^\prime = x$.
-	
-	\end{enumerate}
-\end{definition}
 
-\begin{definition}
+	\end{enumerate}
+\end{customdef}
+
+\begin{customdef}{3.16}
 	The RSA TOWP is defined as follows:
 
 	\begin{itemize}
-	
+
 		\item  The distribution over $\mathcal{P \times T}$ is defined as follows:
-			A pair of primes $p$ and $q$ is chosen according to some distribution. Let $n = pq$, and choose $e$ such that $gcd(e, \phi(n))=1$, according to some distribution. Find $d$ such that $d = e^{-1} \mod \phi(n)$. The parameter is  $(n, e)$ and the trapdoor is $(n, d)$ 
+			A pair of primes $p$ and $q$ is chosen according to some distribution. Let $n = pq$, and choose $e$ such that $gcd(e, \phi(n))=1$, according to some distribution. Find $d$ such that $d = e^{-1} \mod \phi(n)$. The parameter is  $(n, e)$ and the trapdoor is $(n, d)$
 		\item  $f(x, p) = x^e \mod n$
 		\item  $g(y, t) = y^d \mod n$
-	
-	\end{itemize}
-\end{definition}
 
-\begin{definition}
+	\end{itemize}
+\end{customdef}
+
+\begin{customdef}{3.17}
 	A Digital Signature Scheme over a message space $\mathcal{M}$, a signature space $\mathcal{S}$, a signing key space $\mathcal{Z}$, and a verification key space $\mathcal{V}$ consists of:
 
 	\begin{itemize}
-	
+
 		\item  A distribution over $\mathcal{Z \times V}$
 		\item  A possibly randomized signing function $\sigma : \mathcal{M \times Z} \rightarrow \mathcal{S}$
 		\item  A verification function $\tau : \mathcal{M \times V \times S} \rightarrow \{0, 1\}$
 	\end{itemize}
 
 	such that $\tau(m, v, \sigma(m, z)) = 1$ for all messages $m \in \mathcal{M}$ and for all pairs $(z, v) \in \mathcal{Z \times V}$ with positive probability.
-\end{definition}
+\end{customdef}
 
-\begin{definition}
+\begin{customdef}{3.18}
 	The t-message signature forgery game $G$ is defined as follows:
 
 	\begin{enumerate}
-	
+
 		\item  $G$ samples a pair $(z, v) \in \mathcal{Z \times V}$ according to the signature scheme's distribution, and outputs $v$.
 
-		\item  $G$ accepts up to t messages $m_i \in \mathcal{M}$ and outputs $\sigma(m_i, z)$, for fresh randomness. 
+		\item  $G$ accepts up to t messages $m_i \in \mathcal{M}$ and outputs $\sigma(m_i, z)$, for fresh randomness.
 		\item  $G$ accepts as input a tuple $(m, s) \in \mathcal{M \times S}$. The game is won iff $\tau(m, v, s) = 1$ and $m$ was not submitted as an $m_j$ during step 2.
-	
+
 	\end{enumerate}
-\end{definition}
+\end{customdef}
 
-\begin{definition}
-	A hash function is a function $h: D \rightarrow R$ such that $|D| \gg |R|$.
-\end{definition}
-
-\begin{definition}
-	Given a cryptographic hash function $h: \mathcal{M} \rightarrow \mathbb{Z}_n$, and the RSA-TOWP a Full Domain Hash (FDH) is a ignature scheme, and is defined as follows:
+\begin{customdef}{FDH}
+	Given a cryptographic hash function $h: \mathcal{M} \rightarrow \mathbb{Z}_n$ and the RSA-TOWP, a Full Domain Hash (FDH) is a signature scheme and is defined as follows:
 
 	\begin{itemize}
-	
-		\item  The message space of FDA is $\mathcal{M}$. The signature space of FDA is $\mathbb{Z}_n$. The signing key space of the FDA is the trapdoor space of the RSA\_TWOP. The verification key space of the FDA is the parameter space of the RSA-TOWP.
-		\item  The signing function of the FDA is defined as 
+
+		\item  The message space of FDH is $\mathcal{M}$. The signature space of FDH is $\mathbb{Z}_n$. The signing key space of the FDH is the trapdoor space of the RSA\_TWOP. The verification key space of the FDH is the parameter space of the RSA-TOWP.
+		\item  The signing function of the FDH is defined as
 
 			\[
 				\sigma((n, d), m) = (h(m))^d \bmod n
-			\] 
+			\]
 		\item  The verification function is defined as
 
 			\[
 				\tau((n, e), m, s) = h(m) == s^e \bmod n
-			.\] 
-	
+			.\]
+
 	\end{itemize}
+\end{customdef}
 
+\begin{customdef}{3.19}
+	A hash function is a function $h: D \rightarrow R$ such that $|D| \gg |R|$.
+\end{customdef}
 
-\end{definition}
-
-\begin{definition}
+\begin{customdef}{3.20}
 	The t-message collision finding game $G$ for a hash function $h$ is defined as follows:
 
 	\begin{enumerate}
-	
+
 		\item  $G$ accepts up to t inputs $x_i \in D$ and outputs $h(x_i)$.
 		\item  The game is won if during step 1 there were two distinct inputs $x, x^\prime$, such that $h(x) = h(x^\prime)$.
-	
+
 	\end{enumerate}
-\end{definition}
+\end{customdef}
+
+\subsection*{Chapter 4}
+
+\begin{customdef}{4.1}
+  A search problem is a 4-tuple $(\mathcal{X}, \mathcal{W}, \mathcal{Q}, P_ X )$ consisting of an instance set $\mathcal{X}$, a solution set (or witness set) $\mathcal{W}$, a predicate $\mathcal{Q} : \mathcal{X} \times \mathcal{W} \rightarrow \{0, 1\}$, as
+well as a probability distribution $P_X$ over the instance set.
+\end{customdef}
+
+\begin{customdef}{4.2}
+  A problem $p$ is (an object) equipped with a set $\Sigma_p$ of solvers, a partially ordered set $(\Omega_p; \leq)$ of performance values, and a performance function
+  \[
+    \bar{p} : \Sigma_p \rightarrow \Omega_p
+  \]
+  assigning a performance value $\bar{p}(s)$ to every solver $s \in \Sigma_p$. A solver $s$ for which $\bar{p}(s) \geq a$ for $a \in \Omega_p$ is called an $a$-solver for $p$.
+\end{customdef}
+
+\begin{customdef}{4.3}
+  For functions $\rho$ and $\tau$ satisfying $\tau \bar{p} \leq \bar{q} \rho$, $\rho$ is called a $\tau$-reduction of problem $q$ to problem $p$.
+\end{customdef}
+
+\begin{customdef}{4.6}
+  A multi-game is a list $(g_1, ..., g_k)$ of games, and the $g_i$ are called subgames or component games. We denote by $(g_1, ..., g_k )^{\lor}$ (and by $(g_1, ..., g_k)^{\land}$ ) the game corresponding to the logical OR (the logical AND) of the k subgames, i.e., the game of winning at least one (respectively all) of the sub-games:
+  \[
+    \omega(w, (g_1, ..., g_k)^{\lor}) = \bigvee\limits_{i=1}^k \omega(w, g_i)
+  .\]
+\end{customdef}
+
+\begin{customdef}{4.7}
+  A distinction problem is a pair $(S_0, S_1)$ of O-valued random vari-
+  ables (or, more precisely, distributions), and will be denoted as $\langle S_0 | S_1\rangle$. A distinguisher $D$ is a $\mathcal{D}$-valued random variable, and the performance of $D$ for distinction problem $\langle S_0 | S_1\rangle$ is
+  \[
+    \overline{\langle S_0 | S_1\rangle}(D) := \Delta^D(S_0, S_1) = \Pr\nolimits^{DS_1}(\kappa(D, S_1)=1) - \Pr\nolimits^{DS_0}(\kappa(D, S_0)=1)
+  .\]
+\end{customdef}
+
+\begin{customdef}{4.8}
+  A bit-guessing problem is a pair a $\mathcal{O} \times \{0, 1\}$-valued random variable $(S, B)$, and is denoted as $\llbracket S; B \rrbracket$. A distinguisher (or bit-guesser) $D$ is a $\mathcal{D}$-valued random variable, and the performance of $D$ for bit-guessing problem $\llbracket S; B \rrbracket$ is
+  \[
+    \overline{\llbracket S; B \rrbracket}(D) := \Lambda(\llbracket S; B \rrbracket) = 2 \left( \Pr\nolimits^{D(S,B)}(\kappa(D,S) = 1) - \frac{1}{2} \right)
+  .\]
+\end{customdef}
+
+
+\subsection*{Chapter 5}
+
+\begin{customdef}{5.1}
+  For an $\mathcal{X}$-random variable $X$, we denote by $X^q$ the $\mathcal{X}^q$-random variable consisting of $q$ independent copies of $X$. Moreover, we denote by $\langle X \rangle$ the $X^\infty$-random variable consisting of a countable number independent copies of $X$.
+\end{customdef}
+
+\begin{customdef}{5.2}
+  For an $\mathcal{X}$-random variable $X$, we denote by $X^{[q]}$ the $\mathcal{X}^q$-random variable consisting of $q$ clones of $X$.
+\end{customdef}
+
+\begin{customdef}{5.3}
+  We define
+  \[
+    \psi_q(x) := 1 - (1-x)^q
+  \]
+  and the inverse function
+  \[
+    \chi_q(x) := 1-(1-x)^{1/q}
+  .\]
+\end{customdef}
+
+\begin{customdef}{5.3}
+  A (game) system $\mathbf{G}$ is called $q$-clonable by system $\mathbf{K}$ if
+  \[
+    \mathbf{K}\mathbf{G} = {\mathbf{G}^{[q]}}^\lor
+  .\]
+\end{customdef}
+
+\begin{customdef}{5.4}
+  A probabilistic game $\mathbf{G}$ defined as a probability distribution over a set $\mathcal{G}$ (the instance set) is called random self-reducible by system $\mathbf{R}$ if
+  \[
+    \forall g \in \mathcal{G} :  \mathbf{R}\mathbf{g} = \mathbf{G}
+  .\]
+\end{customdef}
+
+
+
+
+
+
+
+\subsection*{Chapter 6}
+\begin{customdef}{6.35}
+  The probability that a set of $q$ independent and uniformly chosen values from an alphabet of size $t$ contains a value twice (a collision) is denoted as $p_{\mathrm{coll}}(t,q)$.
+\end{customdef}
+
+\subsection*{Chapter 8}
+
+\begin{customdef}{8.2}
+  The term variable input-length URF (a VIL-URF) refers to the behavior of a $(\{0,1\}^*,\{0,1\}^n)$-system which for each new input in $\{0,1\}^*$ outputs a fresh uniformly random value in $\{0,1\}^n$, and which replies consistently if inputs are repeated. This system (behavior) is denoted as $\mathbf{V}_n$.
+\end{customdef}
+
+\begin{customdef}{8.3}
+  Let $\delta$ be a function $\mathbb{N} \rightarrow \mathbb{R}^+$. A function $H : \mathcal{K} \times \mathcal{Y} \rightarrow \mathcal{Z}$ for $\mathcal{Y} \subseteq \{0,1\}^{*}$ is called a $\delta$-almost universal hash function ($\delta$-AUH for short) if, for any distinct $y$, $y' \in Y$,
+  \[
+		\Pr(H_K(y) = H_K(y')) \leq \delta(\max(|y|, |y'|))
+	\]
+  for uniformly selected key $K \in \mathcal{K}$.
+\end{customdef}
+
 
 \section*{Theorems \& Lemmas}
 \subsection*{Chapter 2}
-\begin{lemma}
-	The best probabilistic distinguisher has the same advantage as the best deterministic distinguisher
-\end{lemma}
+\begin{customlem}{2.0}
+	The best probabilistic distinguisher has the same advantage as the best deterministic distinguisher.
+\end{customlem}
 
-\begin{lemma}
+\begin{customlem}{2.1}
 	The advantage of the best distringuisher for two random variables $X$ and $Y$, is the statistical distance between $X$ and $Y$.
-\end{lemma}
+\end{customlem}
 
-\begin{lemma}[Hybrid Argument]
+\begin{customlem}{2.2}
+  (Hybrid Argument)
 	For any distinguisher D,
 
 	\[
 		\Delta^D(S_0, S_k) = \sum\limits_{i=0}^{k-1} \Delta^D(S_i, S_{i+1})
-	.\] 
-\end{lemma}
+	.\]
+\end{customlem}
 
-\begin{lemma}
+\begin{customlem}{2.3}
 	\[
 		\Lambda^D(\llbracket S_U ; U \rrbracket) = \Delta^D(S_0, S_1).
 	\]
-\end{lemma}
+\end{customlem}
 
-\begin{lemma}
-	For any distinguisher $D$ there exists a distinguisher $D^\prime$ such that 
+\begin{customlem}{2.4}
+	For any distinguisher $D$ there exists a distinguisher $D^\prime$ such that
 
 	\[
 		\Delta^D([S, B], [S,U]) = \frac{1}{2}\Lambda^{D^\prime}(\llbracket S; B\rrbracket)
-	\] 
-\end{lemma}
+	\]
+\end{customlem}
 
-\begin{lemma}
+\begin{customlem}{2.5}
 	For a group $G = \braket{S, \oplus}$, consider a random variable $X$ over $S$, and an independent random variable $U$, uniform over $S$. Then the random variable $U \oplus X$ is uniformly distributed over $S$, and independent from $X$.
-\end{lemma}
+\end{customlem}
 
 \subsection*{Chapter 3}
-\begin{theorem}
+\begin{customthm}{3.1}
 	Let $G$ be a finite additive group, and let $e \in \mathbb{Z}$ such that $gcd(e, |G|)=1$. The $e$-th root of any element $y$ of $G$ (that is an $x \in G$ such that $x^e = y$) can be computed according to $x^d \mod |G|$, where $d$ satisfies:
 
 	\[
-		ed =_{|G|} 1 
-	.\] 
+		ed =_{|G|} 1
+	.\]
 
 	$d$ can be computed using the extended euclidean algorithm.
-\end{theorem}
+\end{customthm}
 
-\begin{lemma}
+\begin{customlem}{3.2}
 	Let $p, q$ be primes, and $n = pq$. Given $n$ and $\phi(n)$, one can efficiently compute $p$ and $q$.
-	
-\end{lemma}
 
-\begin{lemma}
+\end{customlem}
+
+\begin{customlem}{3.3}
 	The RSA function is a premutation on $\mathbb{Z}_n$, it does not need to be restricted to $\mathbb{Z}^*_n$.
-\end{lemma}
+\end{customlem}
 
-\begin{theorem}
+\begin{customlem}{3.4}
 	There cannot exist a computable function that implements a random oracle.
-\end{theorem}
+\end{customlem}
 
-\begin{lemma}
-	If a hash-then-sign construction uses a secure fixed-length signature scheme, and a collision resistant, then the whole construction is secure. 
-\end{lemma}
+\begin{customlem}{3.5}
+	If a hash-then-sign construction uses a secure fixed-length signature scheme, and a collision resistant, then the whole construction is secure.
+\end{customlem}
+
+\subsection*{Chapter 4}
+
+\begin{customthm}{4.1}
+  If there exists an efficient algorithm $A$ which for a given k-bit RSA-modulus $n$, exponent $e$, and ciphertext $c$, computes the LSB of the corresponding plain-text $m$ (where $c = m^e$), then there exists an efficient algorithm which for a given $c$ computes the entire corresponding $m$ (by calling algorithm $A$ $k$ times as a subroutine).
+\end{customthm}
+
+\begin{customlem}{4.10}
+  If $D'$ is closed under complementing the output bit (for every $d \in D'$ there is a $d' \in D'$ such that $\kappa(d',s)=\kappa(d,s) \oplus 1$), then $\Delta^{D'}$ is a pseudo-metric (function satisfying the triangle inequality).
+\end{customlem}
+
+
+\subsection*{Chapter 5}
+\begin{customlem}{5.1}
+  For any game $\mathbf{G}$ and any $q$ we have
+  \[
+    \psi_q \overline{\mathbf{G}} = \overline{{\mathbf{G}^q}^\lor} \sigma^q
+  .\]
+\end{customlem}
+
+\begin{customlem}{5.2}
+  If $\mathbf{G}$ is random self-reducible by $\mathbf{R}$, then
+  \[
+    \overline{\mathbf{G}} = \overline{\mathcal{G}}  \gamma^\mathbf{R}
+  .\]
+\end{customlem}
+
+\begin{customthm}{5.3}
+  If game $\mathbf{G}$ is random self-reducible by $\mathbf{R}$ and $q$-clonable by $\mathbf{K}$, then
+  \[
+    \psi_q \overline{\mathbf{G}} = \overline{\mathbf{G}} \gamma^\mathbf{K} \sigma^q \gamma^\mathbf{R}
+  .\]
+\end{customthm}
+
+
+\subsection*{Chapter 6}
+\begin{customthm}{6.5}
+  If for an $(\mathcal{X},\mathcal{Y})$-system $\mathbf{S}$ one can define an MOC $A$ such that $\mathbf{S}^\mathbf{A} \condequiv T$, then
+  \[
+		\overline{\langle\mathbf{S} | \mathbf{T}\rangle} \leq \overline{\mathbf{b}\mathbf{S}^\mathbf{A}} \circ \gamma^{\widetilde{\mathbf{T}}}
+	.\]
+  In particular,
+  \[
+		\Delta(\mathbf{S} | \mathbf{T}) \leq \Gamma(\mathbf{b}\mathbf{S}^\mathbf{A})
+	.\]
+\end{customthm}
+
+\begin{customlem}{6.6}
+  $p_{\mathrm{coll}}(t,q) \leq \frac{1}{2}q^2/t$
+\end{customlem}
+
+
+\subsection*{Chapter 8}
+
+\begin{customthm}{8.1}
+  \[
+		\theta_r \cbc = \theta_r \cbc [r]
+	.\]
+  For $\theta_r$ defined as above, if the block-former of the $\cbc$-converter is prefix-free, we have (for any $r$)
+  \[
+		[r] \mathbf{R}_{n,n} \xrightarrow{\theta_r \cbc} (\theta_r \mathbf{V}_n)^{\epsilon_r}
+	.\]
+  for $\epsilon_r = \frac{1}{2} r^2 2^{-n}$.
+\end{customthm}
+
+\begin{customthm}{8.2}
+  For any $(\{0, 1\}^*, \{0,1\}^m)$-random function $\mathbf{S}$, and any bound $r$ on the number of queries,
+  \[
+    \big[[r] \mathbf{S}, [r]\mathbf{R}_{m,n} \big] \xrightarrow{[r] \mathrm{casc}} \big( [r] \mathbf{V}_n \big)^{f_r}
+  \]
+  for
+  \[
+    f_r = \Gamma(\mathbf{b}[r]\mathbf{S}^\mathcal{A})
+  ,\]
+  where $\mathcal{A}$ is the game of provoking a collision at the output of the system $\mathbf{S}$.
+\end{customthm}
+
+\subsection*{Chapter 9}
+
+\begin{customthm}{9.3}
+  For any key-agreement protocol,
+  \[
+    I(K_A; ZC) + H(K_A | K_B) \geq H(K_A) - I(X; Y | Z).
+  \]
+\end{customthm}
+
+\begin{customcor}{9.4}
+  For any protocol for which $K_A = K_B$ $(= K)$ with probability 1 and $I(K; ZC) = 0$, we have
+  \[
+    H(K) \leq \min(I(X; Y), I(X; Y |Z)).
+  \]
+\end{customcor}
+
 \end{document}
