@@ -83,6 +83,19 @@
 	\end{enumerate}
 \end{definition}
 
+\subsection*{Exercise 9}
+\begin{definition}
+  The fixed-target MAC-forgery game $G_{fix}$ for a MAC f is defined as follows:
+
+	\begin{enumerate}
+
+		\item  Generate the key $k \in \mathcal{K}$ uniformly at random and choose the target message $\hat{m} \in \mathcal{M}$ according to some distribution. Output $\hat{m}$ at the right interface.
+		\item  On input $m \in \mathcal{M}$ at the right interface, if $m = \hat{m}$, then answer with $\bot$. Otherwise compute $t=f(m,k)$ and answer with $t$.
+		\item  On input a MAC $\hat{t} \in \mathcal{T}$ at the right interface, set output on the left interface to 1 if $\hat{t}=f(m,k)$.
+
+	\end{enumerate}
+\end{definition}
+
 \subsection*{Chapter 2}
 
 \begin{customdef}{2.1}
@@ -383,7 +396,7 @@ well as a probability distribution $P_X$ over the instance set.
   For an $\mathcal{X}$-random variable $X$, we denote by $X^{[q]}$ the $\mathcal{X}^q$-random variable consisting of $q$ clones of $X$.
 \end{customdef}
 
-\begin{customdef}{5.3}
+\begin{customdef}{5.4}
   We define
   \[
     \psi_q(x) := 1 - (1-x)^q
@@ -394,7 +407,7 @@ well as a probability distribution $P_X$ over the instance set.
   .\]
 \end{customdef}
 
-\begin{customdef}{5.3}
+\begin{customdef}{5.4}
   A (game) system $\mathbf{G}$ is called $q$-clonable by system $\mathbf{K}$ if
   \[
     \mathbf{K}\mathbf{G} = {\mathbf{G}^{[q]}}^\lor
@@ -411,16 +424,23 @@ well as a probability distribution $P_X$ over the instance set.
 
 
 
-
-
-
 \subsection*{Chapter 6}
+\begin{customdef}{6.32}
+  For a game $\mathbf{S}^\mathbf{A}$ and a system $\mathbf{T}$ we say that $\mathbf{S}^\mathbf{A}$ is conditionnally equivalent to $\mathbf{T}$, denoted
+  \[
+    \mathbf{S}^\mathbf{A} \condequiv \mathbf{T}
+  \]
+  if, for $i \geq 1$,
+  \[
+     \mathrm{p}^{\mathbf{S}^\mathbf{A}}_{Y^i | X^i, A_i=0} = \mathrm{p}^{\mathbf{T}}_{Y^i | X^i}
+  .\]
+\end{customdef}
+
 \begin{customdef}{6.35}
   The probability that a set of $q$ independent and uniformly chosen values from an alphabet of size $t$ contains a value twice (a collision) is denoted as $p_{\mathrm{coll}}(t,q)$.
 \end{customdef}
 
 \subsection*{Chapter 8}
-
 \begin{customdef}{8.2}
   The term variable input-length URF (a VIL-URF) refers to the behavior of a $(\{0,1\}^*,\{0,1\}^n)$-system which for each new input in $\{0,1\}^*$ outputs a fresh uniformly random value in $\{0,1\}^n$, and which replies consistently if inputs are repeated. This system (behavior) is denoted as $\mathbf{V}_n$.
 \end{customdef}
@@ -509,6 +529,13 @@ well as a probability distribution $P_X$ over the instance set.
   If $D'$ is closed under complementing the output bit (for every $d \in D'$ there is a $d' \in D'$ such that $\kappa(d',s)=\kappa(d,s) \oplus 1$), then $\Delta^{D'}$ is a pseudo-metric (function satisfying the triangle inequality).
 \end{customlem}
 
+\subsection*{Exercise 8}
+\begin{customlem}{(Hoeffding)}
+  Let $\alpha \in (0,1)$ and let $X_1, ..., X_q$ be i.i.d. random variables over $\{0,1\}$ with $p := \Pr[X_i=1]$. Then
+  \[
+    \Pr[\sum_{i=1}^q X_i \leq (p - \alpha)q] \leq e^{-2\alpha^2q}
+  .\]
+\end{customlem}
 
 \subsection*{Chapter 5}
 \begin{customlem}{5.1}
@@ -532,8 +559,28 @@ well as a probability distribution $P_X$ over the instance set.
   .\]
 \end{customthm}
 
+\begin{customlem}{5.4}
+  \[
+    \mu_1(s) = \mathrm{E}_T[\mu(s, T)] = \sum_{t \in T} \mathrm{P}_T(t) \mu(s,t)
+  \]
+  \[
+    \mu_2(s) = \mathrm{E}_S[\mu(S, t)] = \sum_{s \in S} \mathrm{P}_S(s) \mu(s,t)
+  \]
+  For every $0 \leq \epsilon, \epsilon' < 1$ and every function $\mu : \mathcal{S} \times \mathcal{T} \rightarrow [0, 1]$,
+  \[
+    \mathrm{E}_{ST}[\mu(s, t)] \leq \Pr\nolimits^S (\mu_1(S) \geq \epsilon) \cdot \Pr\nolimits^T(\mu_2(T) \geq \epsilon') + \epsilon + \epsilon'.
+  \]
+\end{customlem}
+
 
 \subsection*{Chapter 6}
+\begin{customlem}{6.4}
+  If $\mathbf{S}^\mathbf{A} \stackrel{g}{\equiv} \mathbf{T}^\mathbf{B}$ then
+  \[
+    \overline{\langle\mathbf{S} | \mathbf{T}\rangle} \leq \overline{\mathbf{S}^\mathbf{A}}
+  .\]
+\end{customlem}
+
 \begin{customthm}{6.5}
   If for an $(\mathcal{X},\mathcal{Y})$-system $\mathbf{S}$ one can define an MOC $A$ such that $\mathbf{S}^\mathbf{A} \condequiv T$, then
   \[
